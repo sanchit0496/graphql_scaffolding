@@ -1,0 +1,47 @@
+1. Create (Add a New User):
+
+mutation {
+  addAdmin(name: "Admin Here", email: "admin@example.com") {
+    id
+    name
+    email
+  }
+}
+
+2. Read (Get All Users):
+
+query {
+  admins {
+    id
+    name
+    email
+  }
+}
+
+3. Read (Get Single User by ID):
+
+query {
+  admin(id: 1) {
+    id
+    name
+    email
+  }
+}
+
+4. Update (Edit an Existing User):
+
+mutation {
+  updateAdmin(id: 1, name: "Yeah Admin", email: "jane@example.com") {
+    id
+    name
+    email
+  }
+}
+
+5. Delete (Remove a User):
+
+mutation {
+  deleteAdmin(id: 1) {
+    id
+  }
+}
