@@ -3,6 +3,7 @@ const { GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLInt } = require
 const UserType = require('./types/UserType');
 const User = require('../models/User');
 const { addUserSchema } = require('../validations/userValidation');
+const redisClient = require('../config/redisClient');
 
 const addUser = {
   type: UserType,
@@ -28,19 +29,25 @@ const updateUser = {
     id: { type: new GraphQLNonNull(GraphQLInt) },
     name: { type: GraphQLString },
     email: { type: GraphQLString },
+    // include other fields that can be updated
   },
-  resolve(parent, args) {
-    return User.findByPk(args.id).then(user => {
-      if (!user) {
-        throw new Error('User not found');
-      }
-      return user.update({
-        name: args.name || user.name,
-        email: args.email || user.email
-      });
-    });
+  async resolve(parent, args) {
+    const user = await User.findByPk(args.id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    await user.update(args);
+
+    // Update the cache with the new data
+    const cacheKey = `user:${args.id}`;
+    const updatedUser = await User.findByPk(args.id); // Fetch updated user data
+    await redisClient.setex(cacheKey, 3600, JSON.stringify(updatedUser)); // Refresh cache
+
+    return updatedUser;
   },
 };
+
 
 const deleteUser = {
   type: UserType,
