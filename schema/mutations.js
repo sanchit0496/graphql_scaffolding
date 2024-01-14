@@ -2,6 +2,7 @@
 const { GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLInt } = require('graphql');
 const UserType = require('./types/UserType');
 const User = require('../models/User');
+const { addUserSchema } = require('../validations/userValidation');
 
 const addUser = {
   type: UserType,
@@ -10,6 +11,10 @@ const addUser = {
     email: { type: new GraphQLNonNull(GraphQLString) },
   },
   resolve(parent, args) {
+    const { error } = addUserSchema.validate(args);
+    if (error) {
+      throw new Error(`Validation error: ${error.details.map(x => x.message).join(', ')}`);
+    }
     return User.create({
       name: args.name,
       email: args.email
