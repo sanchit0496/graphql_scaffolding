@@ -1,7 +1,14 @@
 const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 3000;
+const { graphqlHTTP } = require('express-graphql');
+const schema = require('./schema/schema');
+const sequelize = require('./config/database');
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const app = express();
+
+
+app.use('/graphql', graphqlHTTP({
+    schema,
+    graphiql: true, // Enable GraphiQL in development
+}));
+  
+app.listen(3000, () => console.log('Server running on port 3000'));
