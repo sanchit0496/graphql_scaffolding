@@ -4,6 +4,7 @@ const UserType = require('./types/UserType');
 const User = require('../models/User');
 const { addUserSchema } = require('../validations/userValidation');
 const redisClient = require('../config/redisClient');
+const { producer } = require('../kafka/kafkaProducer');
 
 const addUser = {
   type: UserType,
@@ -44,6 +45,12 @@ const updateUser = {
     const updatedUser = await User.findByPk(args.id); // Fetch updated user data
     await redisClient.setex(cacheKey, 3600, JSON.stringify(updatedUser)); // Refresh cache
 
+    // Once the user is created, send a message to Kafka
+    await producer.send({
+      topic: 'user-activity',
+      messages: [{ value: JSON.stringify({ userId: args.id, action: 'editUser' }) }],
+    });
+    
     return updatedUser;
   },
 };

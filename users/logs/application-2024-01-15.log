@@ -30,3 +30,17 @@
 2024-01-15 02:51:51 info: Query/Mutation: id, Return Type: Int
 2024-01-15 02:51:51 info: Query/Mutation: name, Return Type: String
 2024-01-15 02:51:51 info: Query/Mutation: email, Return Type: String
+2024-01-15 03:30:34 info: Query/Mutation: user, Return Type: User
+2024-01-15 03:30:34 info: Query/Mutation: id, Return Type: Int
+2024-01-15 03:30:34 info: Query/Mutation: name, Return Type: String
+2024-01-15 03:30:34 info: Query/Mutation: email, Return Type: String
+2024-01-15 03:31:48 info: Query/Mutation: user, Return Type: User
+2024-01-15 03:31:48 info: Query/Mutation: id, Return Type: Int
+2024-01-15 03:31:48 info: Query/Mutation: name, Return Type: String
+2024-01-15 03:31:48 info: Query/Mutation: email, Return Type: String
+2024-01-15 03:42:15 info: Query/Mutation: updateUser, Return Type: User
+2024-01-15 03:42:15 error: Error in updateUser: KafkaJSError: The producer is disconnected
+2024-01-15 03:45:22 info: Query/Mutation: updateUser, Return Type: User
+2024-01-15 03:45:23 info: Query/Mutation: id, Return Type: Int
+2024-01-15 03:45:23 info: Query/Mutation: name, Return Type: String
+2024-01-15 03:45:23 info: Query/Mutation: email, Return Type: String

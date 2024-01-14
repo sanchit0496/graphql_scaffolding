@@ -1,17 +1,15 @@
 const express = require("express");
 const { graphqlHTTP } = require("express-graphql");
 const schema = require("./schema/schema");
-const sequelize = require("./config/database");
 const logger = require("./logger"); // Make sure the path is correct
 const { applyMiddleware } = require('graphql-middleware');
+const { connectKafkaConsumer } = require('./kafka/kafkaProducer');
 
 const app = express();
 
 const loggingMiddleware = (resolve, root, args, context, info) => {
     const { fieldName, returnType } = info;
-    console.log('info', info)
     logger.info(`Query/Mutation: ${fieldName}, Return Type: ${returnType}`);
-    console.log('inside middleware')
     try {
       const result = resolve(root, args, context, info);
   
@@ -41,3 +39,5 @@ app.use(
 );
 
 app.listen(3001, () => console.log("Server running on port 3001"));
+// Connect to Kafka when starting the service
+connectKafkaConsumer().catch(console.error);
