@@ -1,0 +1,47 @@
+1. Create (Add a New User):
+
+mutation {
+  addUser(name: "John Doe", email: "john@example.com") {
+    id
+    name
+    email
+  }
+}
+
+2. Read (Get All Users):
+
+query {
+  users {
+    id
+    name
+    email
+  }
+}
+
+3. Read (Get Single User by ID):
+
+query {
+  user(id: 1) {
+    id
+    name
+    email
+  }
+}
+
+4. Update (Edit an Existing User):
+
+mutation {
+  updateUser(id: 1, name: "Jane Doe", email: "jane@example.com") {
+    id
+    name
+    email
+  }
+}
+
+5. Delete (Remove a User):
+
+mutation {
+  deleteUser(id: 1) {
+    id
+  }
+}
