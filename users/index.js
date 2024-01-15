@@ -1,5 +1,5 @@
 const express = require("express");
-const { graphqlHTTP } = require("express-graphql");
+const { ApolloServer } = require('apollo-server-express');
 const schema = require("./schema/schema");
 const logger = require("./logger"); // Make sure the path is correct
 const { applyMiddleware } = require('graphql-middleware');
@@ -29,15 +29,19 @@ const loggingMiddleware = (resolve, root, args, context, info) => {
   
 
 const schemaWithMiddleware = applyMiddleware(schema, loggingMiddleware);
+const apolloServer = new ApolloServer({ schema: schemaWithMiddleware });
 
-app.use(
-  "/graphql",
-  graphqlHTTP({
-    schema: schemaWithMiddleware,
-    graphiql: true, // Enable GraphiQL in development
-  })
-);
+async function startServer() {
+  await apolloServer.start();
+  apolloServer.applyMiddleware({ app });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+  // Connect Kafka producer
+  await connectKafkaProducer();
+
+  app.listen(3000, () => {
+    console.log('Server is running on http://localhost:3000' + apolloServer.graphqlPath);
+  });
+}
+startServer()
 // Connect to Kafka when starting the service
 connectKafkaProducer().catch(console.error);
